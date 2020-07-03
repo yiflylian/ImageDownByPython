@@ -52,7 +52,7 @@ for item in urls:
     itemdir =os.path.join('.', imagedownpath)
     checkdestfile.checkdestdir(item,itemdir)
     jsondata,end =getjsondata(url,isfirst=True)
-    if not jsondata == None and not end == None and item == urls[0]:
+    if not jsondata == None and not end == None:
           if item==urls[0]:
               end = int(('%s'%(end))[2:])
           #解析json、 写入文件
