@@ -22,7 +22,7 @@ def getjsondata(url,headers=headers,isfirst=False):
                 # print(Link)
                 endpage = getMaxPageByCookies(Link)
                 # print(endpage)
-                return  r.json(),endpage
+                return  r.json(),int(endpage)
             else: return  r.json()
         else: return None
 

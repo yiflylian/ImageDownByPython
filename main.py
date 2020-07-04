@@ -1,4 +1,3 @@
-
 import os #系统
 from  requestjsondata import getjsondata
 import checkdestfile
@@ -38,23 +37,28 @@ imagedownpath ='downimage'
 common= '/photos?page=$page'
 # https://unsplash.com/napi/topics/covid-19/
 url = 'https://unsplash.com/napi/topics/%s/photos?page=%d' %(urls[0],page)
-print(len(urls))
+# print(len(urls))
 # /photos?page=183&per_page=10
 
 checkdestfile.checkdestdir(imagedownpath) #检查下载目录文件是否存在，不存在及创建
 
 
 for item in urls:
+  if item== urls[0]:
+      continue
   page = 1
   url = 'https://unsplash.com/napi/topics/%s/photos?page=%d' %(item,page)
-  print(url)
+  print(item)
   if page==1:
     itemdir =os.path.join('.', imagedownpath)
     checkdestfile.checkdestdir(item,itemdir)
     jsondata,end =getjsondata(url,isfirst=True)
     if not jsondata == None and not end == None:
           if item==urls[0]:
-              end = int(('%s'%(end))[2:])
+              end = int(('%d'%(end))[2:])
+              # print(end)
+              # print( isinstance(end ,int))
+              # break
           #解析json、 写入文件
 
           for i in range(len(jsondata)):
@@ -62,9 +66,10 @@ for item in urls:
                 # imagelink = str.split(jsondata[i]['user']['profile_image']['small'], '?')[0]
                 # imagelink = str.split(jsondata[i]['urls']['raw'], '?')[0]
                 imagelink = jsondata[i]['urls']['raw']
+                imagename = 'page%d_%d.jpg' % (page, i)
                 imagepathname= os.path.join(itemdir,item,'page%d_%d.jpg' % (page,i))
-                print(imagelink)
-                print(imagepathname)
+                print(imagelink + ':'+  imagename)
+                # print(imagepathname)
                 if  not os.path.exists(imagepathname):
                     # urlretrieve(imagelink,imagepathname)
                     try:
@@ -73,9 +78,9 @@ for item in urls:
                     finally:pass
           page=page+1
           # break
-          while page<end:
+          while int(page) <= int(end) and int(page)<=30:
               url = 'https://unsplash.com/napi/topics/%s/photos?page=%d' % (item, page)
-              print(url)
+              # print(url)
               jsondata =getjsondata(url)
               if not json == None:
                   for i in range(len(jsondata)):
@@ -83,9 +88,10 @@ for item in urls:
                       # imagelink = str.split(jsondata[i]['user']['profile_image']['small'], '?')[0]
                       # imagelink = str.split(jsondata[i]['urls']['raw'], '?')[0]
                       imagelink = jsondata[i]['urls']['raw']
-                      imagepathname = os.path.join(itemdir, item, 'page%d_%d.jpg' % (page, i))
-                      print(imagelink)
-                      print(imagepathname)
+                      imagename='page%d_%d.jpg' % (page, i)
+                      imagepathname = os.path.join(itemdir, item,imagename )
+                      print(imagelink+':'+imagename)
+                      # print(imagepathname)
                       if not os.path.exists(imagepathname):
                        try:
                         time.sleep(1)
